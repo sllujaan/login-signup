@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./login.css">
+    <link rel="stylesheet" href="./loading.css">
+    <script src="./login.js" defer ></script>
+    <title>Login Page</title>
+</head>
+
+<body>
+    <center>
+        <div class="login-container">
+            <h1>Login!</h1>
+            <form method="post" onsubmit="onSubmit(event)" class="login-form">
+                <input type="text" name="name" id="name-uuid" placeholder="Enter Name..." required>
+                <input type="password" name="password" id="password" placeholder="Enter Password..." required>
+                <input id="login" type="submit" value="Login!">
+            </form>
+            <div class="signup"><a href="/signup">SignUp Now!</a></div>
+        </div>
+    </center>    
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+.loading {
+    /*
+    background-color: rgba(255, 166, 0, 0.39);*/
+}
+
+.loading circle {
+    fill:none;
+    stroke-width:5;
+    stroke:#ff0f0f;
+    stroke-opacity:1;
+    stroke-miterlimit:4;
+    stroke-dasharray:none;
+    stroke-linecap:round;
+    paint-order:normal;
+    stroke-linejoin:miter;
+    stroke-dashoffset:0;
+    fill-opacity:1;
+
+    
+    stroke-dasharray: 80;
+    animation: rotate 1.5s infinite
+    
+    
+    /*
+    animation: rotate 1.5s infinite
+    stroke-dasharray: 232.1022491455078;
+    stroke-dashoffset: 232.1022491455078;
+
+
+    transition: all 1s;
+    animation: rotate 1s;
+    animation-iteration-count: infinite;
+    animation: rotate 1.5s infinite;
+    animation-timing-function: linear;
+    */
+    
+    
+}
+
+@keyframes rotate {
+    0% {
+        transform-origin: center;
+        transform: rotate(0deg);
+        stroke-dashoffset: 200;
+        stroke: yellow;
+    }
+    10% {
+        stroke: yellow;
+    }
+    60% {
+        stroke-dashoffset: 10;
+        transform-origin: center;
+        transform: rotate(0deg);
+        stroke: green;
+        
+    }
+    100% {
+        stroke-dashoffset: 40;
+        transform-origin: center;
+        transform: rotate(360deg);
+    }
+}

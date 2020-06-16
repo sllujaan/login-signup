@@ -1,0 +1,37 @@
+POST http://localhost:3000/posts
+Content-Type: application/json
+
+{
+    "name": "jake",
+    "password": "12345"
+}
+
+###
+POST http://localhost:3000/signup
+Content-Type: application/json
+
+{
+    "name": "jake",
+    "password": "12345"
+}
+
+
+
+###
+GET http://localhost:3000/users
+
+
+
+###
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "name": "jake",
+    "password": "12345"
+}
+
+
+###
+POST http://localhost:3000/private HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiamFrZSIsInBhc3N3b3JkIjoiJDJiJDEwJHppUEtIdkh0eVkvWWIuWER5RHVXRS5rbHh0bjhXNllCTURJby8wVDNla3BvM2tyMEp4QlFDIiwiaWF0IjoxNTkyMjEwNTQ1LCJleHAiOjE1OTIyMTQxNDV9.COebEjEZyB020BKkTPGSGusaVvvoAFzOM6dLwsPpClo

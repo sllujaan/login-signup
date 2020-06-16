@@ -1,0 +1,62 @@
+
+body{
+    padding: 0;
+    margin: 0;
+}
+
+.login-container{
+    width: 50%;
+    position: relative;
+    top: 100px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid lightgray;
+    user-select: none;
+
+    -webkit-box-shadow: rgba(32, 33, 36, 0.28) 0px 1px 6px 0px;
+    -moz-box-shadow: rgba(32, 33, 36, 0.28) 0px 1px 6px 0px;
+    box-shadow: rgba(32, 33, 36, 0.28) 0px 1px 6px 0px;
+}
+
+@media (max-width: 500px) {
+    .login-container{
+        width: 98%;
+    }
+}
+
+.login-form input{
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid lightgray;
+    
+}
+
+.login-form input[type="submit"] {
+    width: 60%;
+    margin-top: 10px;
+    cursor: pointer;
+
+    font-size: medium;
+    font-weight: bolder;
+
+    -webkit-box-shadow: rgba(32, 33, 36, 0.28) 0px 1px 6px 0px;
+    -moz-box-shadow: rgba(32, 33, 36, 0.28) 0px 1px 6px 0px;
+    box-shadow: rgba(32, 33, 36, 0.28) 0px 1px 6px 0px;
+
+}
+
+.login-form input[type="submit"]:active {
+    transform: scale(1.05);
+}
+
+.error-container {
+    text-align: left;
+    margin-left: 10px;
+    color: red;
+}
+
+
+
