@@ -11,7 +11,7 @@ POST http://localhost:3000/signup
 Content-Type: application/json
 
 {
-    "name": "jake5",
+    "name": "jake7",
     "password": "12345"
 }
 
@@ -28,7 +28,7 @@ Content-Type: application/json
 
 {
     "name": "jake",
-    "password": "12345"
+    "password": "a"
 }
 
 

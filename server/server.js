@@ -51,15 +51,21 @@ app.post('/posts', async (req, res) => {
 
 app.post('/login', async (req, res) => {
 
+    const {name: USER_NAME, password: USER_PASSWORD} = req.body
+
+    if(!USER_NAME || !USER_PASSWORD) return res.status(422).send({ERROR: "user name and password are requierd!"})
+
+    if((typeof USER_NAME !== 'string') || ((typeof USER_PASSWORD !== 'string'))) return res.status(422).send({ERROR: "user name and password must be strings!"})
+
     //getting user from database----
-    await database.getUser(req.body.name, async (err, user) => {
+    await database.getUser(USER_NAME, async (err, user) => {
         if(err) {
             if(err.CODE === 404) return res.status(404).send(err)
             return res.status(500).send(err)
         }
 
         //now user is found and authorizing it----
-        const match = await bcrypt.compare(req.body.password, user.password)
+        const match = await bcrypt.compare(USER_PASSWORD, user.password)
         .catch(err => {
             return res.status(500).send({BYCRYPT_COMPARE_ERROR: err.message})
         })

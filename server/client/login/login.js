@@ -24,7 +24,7 @@ function onSubmit(e) {
     .then(data => {
         console.log(data)
         setTokenLocalStorage(data.ACCESS_TOEKN)
-        window.location.href = "/private"
+        //window.location.href = "/private"
 
     })
     .catch(err => {
@@ -145,10 +145,15 @@ async function login(name, password) {
             }
         )
 
+        //return res.json()
+        
+        
         if(res.status === 200) return res.json()
         return new Promise((resolve, reject) => {
             reject({status: res.status, statusText: res.statusText})
         })
+
+        
     }
     catch(err) {
         return err

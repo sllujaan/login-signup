@@ -29,7 +29,9 @@ function onSubmit(e) {
     })
     .catch(err => {
         console.error(err)
-        setSignUpError("There were some errors while signing you up! Please try again.")
+
+        if(err.status === 409) return setSignUpError("User Name has been taken already! Please try different one.")
+        return setSignUpError("There were some errors while signing you up! Please try again.")
     })
 
 
