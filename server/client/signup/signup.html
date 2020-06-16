@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./signup.css">
     <link rel="stylesheet" href="../login/loading.css">
-    <script src="./signup.js" defer ></script>
+    <script src="./signup.js" defer type="module"></script>
     <title>SignUp Page</title>
 </head>
 
@@ -14,7 +14,7 @@
     <center>
         <div class="login-container">
             <h1>Register Now!</h1>
-            <form method="post" onsubmit="onSubmit(event)" class="login-form">
+            <form class="login-form">
                 <input type="text" name="name" id="name-uuid" placeholder="Enter Name..." required>
                 <input type="password" name="password" id="password" placeholder="Enter Password..." required>
                 <input id="login" type="submit" value="SignUp Now!">
