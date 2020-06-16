@@ -18,6 +18,10 @@ app.use(bodyParser.json());
 var users = []
 
 
+const {
+    ACCESS_TOEKN_SECRET = process.env.ACCESS_TOEKN_SECRET
+} = process.env
+
 
 app.get('/', (req, res) => {
 
@@ -53,17 +57,27 @@ app.post('/login', async (req, res) => {
 
         //getting user from database----
 
+        await database.getUser(req.body.name, async (err, user) => {
+            if(err) {
+                if(err.CODE === 404) return res.status(404).send(err)
+                return res.status(500).send(err)
+            }
+
+            //now user is found and authorizing it----
+
+            const match = await bcrypt.compare(req.body.password, user.password)
+            if(!match) return res.status(403).send({ERROR: "INVALID_USER_PASSWORD", CODE:403})
+
+            const ACCESS_TOEKN = jwt.sign({id:user.id, name:user.name}, ACCESS_TOEKN_SECRET, { expiresIn: '1h' })
+
+            return res.json({ACCESS_TOEKN: ACCESS_TOEKN})
 
 
-        const match = await bcrypt.compare(req.body.password, user.password)
-        if(!match) return res.sendStatus(403)
-
-        const ACCESS_TOEKN = jwt.sign(user, process.env.ACCESS_TOEKN_SECRET, { expiresIn: '1h' })
-
-        return res.json({ACCESS_TOEKN: ACCESS_TOEKN})
+        })
+        
     }
     catch{
-        return res.sendStatus(500)
+        return res.status(500).send({ERROR: "INTERNAL_SERVER_ERROR", CODE:500})
     }
     
     
@@ -71,31 +85,27 @@ app.post('/login', async (req, res) => {
 
 
 app.post('/signup', async (req, res) => {
+    //maximum 20 characters for name in database---dealing it from client side---------
+    //maximum 150 characters for password in database---dealing it from client side---------
     try{
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
         const user = {name: req.body.name, password: hashedPassword}
         
         //inserting data into database---------
         database.addUser(user.name, user.password, (err, result) => {
-            //console.log("callback = ", result)
+
             if(err){
-                if(result === database.ER_DUP_ENTRY) return res.status(409).send({status:"ER_DUP_ENTRY", code: database.ER_DUP_ENTRY})
+                if(err === database.ER_DUP_ENTRY) return res.status(409).send({status:"ER_DUP_ENTRY", code: database.ER_DUP_ENTRY})
+                return res.status(500).send(err)
             }
 
-            if(result) return res.status(200).send({status: "success"})
-            
-            
+            return res.status(200).send({status: "success", code:200})
         })
-
-        //console.log("status = ", status)
-
-        //if(status === database.ER_DUP_ENTRY) return res.status(409).send({status:"ER_DUP_ENTRY", code: ER_DUP_ENTRY})
-
         
     }
     catch(err){
         console.log(err)
-        return res.sendStatus(500)
+        return res.status(500).send({ERROR: "INTERNAL_SERVER_ERROR", CODE:500})
     }
     
     
@@ -139,7 +149,7 @@ function authenticateUser(req, res, next) {
     const authHeader = req.headers.authorization
     const ACCESS_TOKEN = authHeader.split(' ')[1]
 
-    jwt.verify(ACCESS_TOKEN, process.env.ACCESS_TOEKN_SECRET, (err, decoded) => {
+    jwt.verify(ACCESS_TOKEN, ACCESS_TOEKN_SECRET, (err, decoded) => {
         if(err) return res.sendStatus(403)
         req.decodedData = decoded
     })
