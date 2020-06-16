@@ -23,6 +23,8 @@ const {
 } = process.env
 
 
+
+
 app.get('/', (req, res) => {
 
     res.redirect('/home')
@@ -65,18 +67,21 @@ app.post('/login', async (req, res) => {
 
             //now user is found and authorizing it----
 
-            const match = await bcrypt.compare(req.body.password, user.password)
+            const match = await bcrypt.compare(req.body.password)
+            .catch(err => {
+                console.log(err.stack)
+            })
+            
             if(!match) return res.status(403).send({ERROR: "INVALID_USER_PASSWORD", CODE:403})
 
             const ACCESS_TOEKN = jwt.sign({id:user.id, name:user.name}, ACCESS_TOEKN_SECRET, { expiresIn: '1h' })
 
             return res.json({ACCESS_TOEKN: ACCESS_TOEKN})
 
-
         })
         
     }
-    catch{
+    catch(err){
         return res.status(500).send({ERROR: "INTERNAL_SERVER_ERROR", CODE:500})
     }
     
@@ -157,6 +162,12 @@ function authenticateUser(req, res, next) {
     next()
 }
 
+
+
+
+process.on('uncaughtException', (err) => {
+    //console.log(err)
+})
 
 
 
