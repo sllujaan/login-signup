@@ -51,6 +51,7 @@ app.post('/posts', async (req, res) => {
 
 app.post('/login', async (req, res) => {
 
+    //error handling--------
     const {name: USER_NAME, password: USER_PASSWORD} = req.body
 
     if(!USER_NAME || !USER_PASSWORD) return res.status(422).send({ERROR: "user name and password are requierd!"})
@@ -72,7 +73,7 @@ app.post('/login', async (req, res) => {
 
         if(res.headersSent) return
 
-        if(!match) return res.status(403).send({ERROR: "INVALID_USER_PASSWORD", CODE:403})
+        if(!match) return res.status(401).send({ERROR: "INVALID_USER_PASSWORD", CODE:401})
 
         var ACCESS_TOEKN = null
 
@@ -93,28 +94,40 @@ app.post('/login', async (req, res) => {
 
 
 app.post('/signup', async (req, res) => {
+
+    //error handling--------
+    const {name: USER_NAME, password: USER_PASSWORD} = req.body
+
+    if(!USER_NAME || !USER_PASSWORD) return res.status(422).send({ERROR: "user name and password are requierd!"})
+
+    if((typeof USER_NAME !== 'string') || ((typeof USER_PASSWORD !== 'string'))) return res.status(422).send({ERROR: "user name and password must be strings!"})
+
+
+
     //maximum 20 characters for name in database---dealing it from client side---------
     //maximum 150 characters for password in database---dealing it from client side---------
-    try{
-        const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        const user = {name: req.body.name, password: hashedPassword}
-        
-        //inserting data into database---------
-        database.addUser(user.name, user.password, (err, result) => {
 
-            if(err){
-                if(err === database.ER_DUP_ENTRY) return res.status(409).send({status:"ER_DUP_ENTRY", code: database.ER_DUP_ENTRY})
-                return res.status(500).send(err)
-            }
+    const hashedPassword = await bcrypt.hash(USER_PASSWORD, 10)
+    .catch(err => {
+        return res.status(500).send({BYCRYPT_HASH_ERROR: err.message})
+    })
 
-            return res.status(200).send({status: "success", code:200})
-        })
+    if(res.headersSent) return
+
+    const user = {name: USER_NAME, password: hashedPassword}
+    
+    //inserting data into database---------
+    database.addUser(user.name, user.password, (err, result) => {
+
+        if(err){
+            if(err === database.ER_DUP_ENTRY) return res.status(409).send({status:"ER_DUP_ENTRY", code: database.ER_DUP_ENTRY})
+            return res.status(500).send(err)
+        }
+
+        return res.status(200).send({status: "success", code:200})
+    })
         
-    }
-    catch(err){
-        console.log(err)
-        return res.status(500).send({ERROR: "INTERNAL_SERVER_ERROR", CODE:500})
-    }
+
     
     
 })

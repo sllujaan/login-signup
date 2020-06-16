@@ -24,12 +24,14 @@ function onSubmit(e) {
     .then(data => {
         console.log(data)
         setTokenLocalStorage(data.ACCESS_TOEKN)
-        //window.location.href = "/private"
+        window.location.href = "/private"
 
     })
     .catch(err => {
         console.error(err)
-        setLoginError("name or password is incorrect.")
+        //401 is unauthorized user---
+        if((err.status === 401) || (err.status === 404)) return setLoginError("Name or Password is incorrect!")
+        return setLoginError("Unkown Error! please contanct the administrator.")
     })
     
 }
