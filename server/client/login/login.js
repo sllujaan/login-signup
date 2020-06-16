@@ -1,29 +1,31 @@
-var busy = document.getElementsByClassName("busy")[0]
+
+import { USER_TOEKN, setToken_localStorage, getToken_localStorage } from "../services/localStorage_services.js"
+import { login } from '../services/client_server_api_services.js'
+
+
 var signup = document.getElementsByClassName("signup")[0]
-
-const USER_TOEKN = "____UUID__TOKEN0x03889100"
-
 var loginForm = document.getElementsByClassName("login-form")[0]
 
+handleExistedToken(USER_TOEKN)
 
-var users = [   {name:"jake", password:"123"},
-                {name:"mike", password:"111"}
-            ]
 
+document.addEventListener('submit', e => {
+    e.preventDefault()
+    onSubmit(e)
+})
 
 
 function onSubmit(e) {
-    e.preventDefault()
 
     var name = e.target[0].value
     var password = e.target[1].value
 
     changeFormStatusToBusy(name,  password)
-
+    
     login(name, password)
     .then(data => {
         console.log(data)
-        setTokenLocalStorage(data.ACCESS_TOEKN)
+        setToken_localStorage(data.ACCESS_TOEKN)
         window.location.href = "/private"
 
     })
@@ -32,43 +34,19 @@ function onSubmit(e) {
         //401 is unauthorized user---
         if((err.status === 401) || (err.status === 404)) return setLoginError("Name or Password is incorrect!")
         return setLoginError("Unkown Error! please contanct the administrator.")
-    })
-    
+    })    
 }
-
-function setTokenLocalStorage(value) {
-    localStorage.setItem(USER_TOEKN, value)
-}
-
 
 function changeFormStatusToBusy(name,  password) {
 
     var error = document.getElementsByClassName("error-container")[0]
     var login = document.getElementById("login")
-    
 
     if(error) error.remove()
     login.remove()
     loginForm.style.setProperty("pointer-events", "none")
     signup.style.setProperty("pointer-events", "none")
     loginForm.append(getBusyIcon())
-
-
-        /*
-
-        databaseLogin(name,  password)
-        .then(res => {
-            console.log(res)
-            console.log(window.location)
-            window.location.href = "/home"
-        })
-        .catch(err => {
-            console.error(err)
-            setLoginError("name or password is incorrect.")
-        })
-    
-        */
-
 }
 
 function getBusyIcon() {
@@ -82,24 +60,6 @@ function getBusyIcon() {
     div.innerHTML = content
     return div
 }
-
-
-
-function databaseLogin(name, password) {
-    return new Promise((resolve, reject) => {
-        user = users.find(user => {
-            return (user.name === name && user.password === password)
-        })
-        
-        setTimeout(() => {
-            if(!user) return reject("no user found.")
-            resolve("success!!!") 
-        }, 2000);
-    })
-    
-
-}
-
 
 
 function setLoginError(error){
@@ -123,43 +83,6 @@ function setLoginError(error){
 
 }
 
-
-
-
-async function login(name, password) {
-
-    const loginURL = `http://localhost:3000/login`
-
-    try{
-        var res = await fetch(
-            loginURL,
-            {
-                method: 'POST',
-                mode: 'cors', // no-cors, *cors, same-origin
-                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                credentials: 'same-origin', // include, *same-origin, omit
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8'
-                },
-                redirect: 'follow', // manual, *follow, error
-                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-                body: JSON.stringify({name: name, password: password})
-            }
-        )
-
-        //return res.json()
-        
-        
-        if(res.status === 200) return res.json()
-        return new Promise((resolve, reject) => {
-            reject({status: res.status, statusText: res.statusText})
-        })
-
-        
-    }
-    catch(err) {
-        return err
-    }
+function handleExistedToken(token) {
+    if(getToken_localStorage(token)) window.location.href = "/private"
 }
-
-

@@ -22,6 +22,9 @@ function processToken() {
 }
 processToken()
 
+function removeToken(TOKEN_ID) {
+    return localStorage.removeItem(TOKEN_ID)
+}
 
 function getToken(TOKEN_ID) {
     return localStorage.getItem(TOKEN_ID)
@@ -29,6 +32,9 @@ function getToken(TOKEN_ID) {
 
 
 function showUnauthorizedUser(message) {
+
+    removeToken(USER_TOEKN)
+
     var h1 = document.createElement("h1")
     h1.classList.add("unauthorized")
     h1.innerText = `${message}`

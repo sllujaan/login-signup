@@ -1,6 +1,7 @@
 var busy = document.getElementsByClassName("busy")[0]
 var signup = document.getElementsByClassName("signup")[0]
 
+const USER_TOEKN = "____UUID__TOKEN0x03889100"
 
 var loginForm = document.getElementsByClassName("login-form")[0]
 
@@ -9,7 +10,7 @@ var users = [   {name:"jake", password:"123"},
                 {name:"mike", password:"111"}
             ]
 
-
+removeToken(USER_TOEKN)
 
 function onSubmit(e) {
     e.preventDefault()
@@ -157,3 +158,7 @@ async function signupDB(name, password) {
     }
 }
 
+
+function removeToken(TOKEN_ID) {
+    return localStorage.removeItem(TOKEN_ID)
+}
