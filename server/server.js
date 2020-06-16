@@ -51,39 +51,36 @@ app.post('/posts', async (req, res) => {
 
 app.post('/login', async (req, res) => {
 
+    //getting user from database----
+    await database.getUser(req.body.name, async (err, user) => {
+        if(err) {
+            if(err.CODE === 404) return res.status(404).send(err)
+            return res.status(500).send(err)
+        }
 
-    //const user = users.find(user => user.name == req.body.name)
-    //if(!user) return res.sendStatus(401)
-    
-    try{
-
-        //getting user from database----
-
-        await database.getUser(req.body.name, async (err, user) => {
-            if(err) {
-                if(err.CODE === 404) return res.status(404).send(err)
-                return res.status(500).send(err)
-            }
-
-            //now user is found and authorizing it----
-
-            const match = await bcrypt.compare(req.body.password)
-            .catch(err => {
-                console.log(err.stack)
-            })
-            
-            if(!match) return res.status(403).send({ERROR: "INVALID_USER_PASSWORD", CODE:403})
-
-            const ACCESS_TOEKN = jwt.sign({id:user.id, name:user.name}, ACCESS_TOEKN_SECRET, { expiresIn: '1h' })
-
-            return res.json({ACCESS_TOEKN: ACCESS_TOEKN})
-
+        //now user is found and authorizing it----
+        const match = await bcrypt.compare(req.body.password, user.password)
+        .catch(err => {
+            return res.status(500).send({BYCRYPT_COMPARE_ERROR: err.message})
         })
-        
-    }
-    catch(err){
-        return res.status(500).send({ERROR: "INTERNAL_SERVER_ERROR", CODE:500})
-    }
+
+        if(res.headersSent) return
+
+        if(!match) return res.status(403).send({ERROR: "INVALID_USER_PASSWORD", CODE:403})
+
+        var ACCESS_TOEKN = null
+
+        try{
+            ACCESS_TOEKN = jwt.sign({id:user.id, name:user.name}, ACCESS_TOEKN_SECRET, { expiresIn: '1h' })
+        }
+        catch(err) {
+            return res.status(500).send({JWT_SIGN_ERROR: err.message})
+        }
+
+        return res.json({ACCESS_TOEKN: ACCESS_TOEKN})
+            
+
+    })
     
     
 })
@@ -161,13 +158,6 @@ function authenticateUser(req, res, next) {
 
     next()
 }
-
-
-
-
-process.on('uncaughtException', (err) => {
-    //console.log(err)
-})
 
 
 
