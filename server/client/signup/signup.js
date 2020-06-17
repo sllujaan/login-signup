@@ -21,7 +21,7 @@ function onSubmit(e) {
     signupDB(name, password)
     .then(data => {
         console.log(data)
-        window.location.href = "/login"
+        window.location.href = "/signup/?status=success"
 
     })
     .catch(err => {
@@ -81,3 +81,17 @@ function setSignUpError(error){
     loginForm.append(input)
 
 }
+
+
+
+
+var checkReadyState = setInterval(() => {
+    if (document.readyState === "complete") {
+      clearInterval(checkReadyState)
+      console.log('DOM is ready.')
+      
+      var form_name = document.querySelector("#name-uuid")
+      form_name.focus()
+      
+    }
+}, 100)

@@ -7,7 +7,7 @@ var containerPrivateContent = document.querySelector(".container-private-content
 
 function processToken() {
     var TOKEN = getToken_localStorage(USER_TOEKN)
-    if(!TOKEN) return showUnauthorizedUser("Unauthorized User No Token Found.")
+    if(!TOKEN) return showUnauthorizedUser("Unauthorized User! No Token Found.")
     
     validToken()
     .then(data => {
@@ -16,7 +16,7 @@ function processToken() {
     })
     .catch(err => {
         console.error(err)
-        return showUnauthorizedUser("Unauthorized User invalid Token.")
+        return showUnauthorizedUser("Unauthorized User! invalid Token.")
     })
 }
 
@@ -65,7 +65,13 @@ function showTrustedUser(name) {
     h1.classList.add("trusted")
     h1.innerHTML = `Welcome <span style="color:blue;">${name}</span> You are a trusted User!`
 
+    var div_signout = document.createElement("div")
+    div_signout.classList.add("signout")
+    div_signout.innerHTML = `<a href="/signup">SignOut!</a>`
+
+    //<div class="signout"><a href="/signup">SignOut!</a></div>
     containerPrivateContent.innerHTML = ''
     containerPrivateContent.append(h1)
+    containerPrivateContent.append(div_signout)
 
 }

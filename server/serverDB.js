@@ -19,7 +19,12 @@ var conn = mysql.createConnection({
 })
 
 conn.connect(err => {
-    if(err) throw err
+    if(err) {
+        console.log("database connection failed.")
+        console.log({ERROR_CODE: err.code, ERROR_NO: err.errno})
+        return
+    }
+
     console.log("database connected successfully.")
 })
 
@@ -29,6 +34,21 @@ var addUser = (name, password, callback) => {
     var sql = `INSERT INTO ?? (??, ??) VALUES (?, ?);`
     var inserts = ['users', 'name', 'password', name, password]
     sql = mysql.format(sql, inserts)
+
+
+    console.log(conn.state)
+
+    if(conn.state === 'disconnected') {
+        conn.connect(err => {
+            if(err) {
+                console.log("database connection failed.")
+                console.log({ERROR_CODE: err.code, ERROR_NO: err.errno})
+                return callback({ERROR: "DATABASE CONNECTION FAILURE", ERROR_NO: err.errno}, null)
+            }
+        })
+
+        if(conn.state === 'disconnected') return callback({ERROR: "DATABASE CONNECTION FAILURE", ERROR_NO: "UNKOWN"}, null)
+    }
 
      conn.query(sql, (error, results, fields) => {
         if(error) {

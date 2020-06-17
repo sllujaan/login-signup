@@ -9,6 +9,7 @@ var loginForm = document.getElementsByClassName("login-form")[0]
 handleExistedToken(USER_TOEKN)
 
 
+
 document.addEventListener('submit', e => {
     e.preventDefault()
     onSubmit(e)
@@ -86,3 +87,16 @@ function setLoginError(error){
 function handleExistedToken(token) {
     if(getToken_localStorage(token)) window.location.href = "/private"
 }
+
+
+
+var checkReadyState = setInterval(() => {
+    if (document.readyState === "complete") {
+      clearInterval(checkReadyState)
+      console.log('DOM is ready.')
+      
+      var form_name = document.querySelector("#name-uuid")
+      form_name.focus()
+      
+    }
+}, 100)

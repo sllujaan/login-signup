@@ -5,6 +5,7 @@ var bcrypt = require('bcrypt')
 var bodyParser = require('body-parser')
 var cors = require("cors")
 var database = require("./serverDB")
+var url = require("url")
 
 var app = express()
 
@@ -118,7 +119,7 @@ app.post('/signup', async (req, res) => {
     
     //inserting data into database---------
     database.addUser(user.name, user.password, (err, result) => {
-
+        
         if(err){
             if(err === database.ER_DUP_ENTRY) return res.status(409).send({status:"ER_DUP_ENTRY", code: database.ER_DUP_ENTRY})
             return res.status(500).send(err)
@@ -151,8 +152,15 @@ app.get('/login', (req, res) => {
     res.sendFile("client/login/login.html", {root: __dirname})
 })
 
-app.get('/signup:status', (req, res) => {
-    res.sendFile("client/signup/signup.html", {root: __dirname})
+app.get('/signup', (req, res) => {
+
+    var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+
+    const status = getUrlParameter(fullUrl, 'status')
+
+    if( status && (status.toString() === "success")) return res.sendFile("client/signup_success/signup_success.html", {root: __dirname})
+
+    return res.sendFile("client/signup/signup.html", {root: __dirname})
 })
 
 app.get('/signup-success', (req, res) => {
@@ -183,6 +191,13 @@ function authenticateUser(req, res, next) {
 }
 
 
+function getUrlParameter(url, parameterName) {
+    const current_url = new URL(url)
+    const serchParams = current_url.searchParams
+
+    const param = serchParams.get(parameterName)
+    return param
+}
 
 
 

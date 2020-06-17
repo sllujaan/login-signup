@@ -6,10 +6,10 @@ var containerSuccess = document.querySelector(".container-success")
 console.log(containerSuccess)
 
 
-function showSingnupSuccess() {
+function showSingnupSuccess(message) {
 
     var h1 = document.createElement("h1")
-    h1.classList.add("unauthorized")
+    h1.classList.add("success")
     h1.innerText = `${message}`
 
     var span = document.createElement("span")
@@ -21,10 +21,10 @@ function showSingnupSuccess() {
     var totalCount = 5
     timer.innerHTML = `${totalCount}`
     
-    containerPrivateContent.innerHTML = ''
-    containerPrivateContent.append(h1)
-    containerPrivateContent.append(span)
-    containerPrivateContent.append(timer)
+    containerSuccess.innerHTML = ''
+    containerSuccess.append(h1)
+    containerSuccess.append(span)
+    containerSuccess.append(timer)
 
     setInterval(() => {
         if(totalCount >= 0) {
@@ -38,3 +38,6 @@ function showSingnupSuccess() {
     }, 1000);
 
 }
+
+
+showSingnupSuccess("You have been Registered Successfully.")
