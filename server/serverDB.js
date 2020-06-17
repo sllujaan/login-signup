@@ -18,6 +18,11 @@ var conn = mysql.createConnection({
     database: MYSQL_DATABASE
 })
 
+conn.on('error', (err) => {
+    console.log("database error>>>>>>>>>>>")
+    console.log(err)
+})
+
 conn.connect(err => {
     if(err) {
         console.log("database connection failed.")
@@ -25,7 +30,7 @@ conn.connect(err => {
         return
     }
 
-    console.log("database connected successfully.")
+    console.log("database connected successfully.", "status: ", conn.state)
 })
 
 var addUser = (name, password, callback) => {
@@ -38,17 +43,8 @@ var addUser = (name, password, callback) => {
 
     console.log(conn.state)
 
-    if(conn.state === 'disconnected') {
-        conn.connect(err => {
-            if(err) {
-                console.log("database connection failed.")
-                console.log({ERROR_CODE: err.code, ERROR_NO: err.errno})
-                return callback({ERROR: "DATABASE CONNECTION FAILURE", ERROR_NO: err.errno}, null)
-            }
-        })
-
-        if(conn.state === 'disconnected') return callback({ERROR: "DATABASE CONNECTION FAILURE", ERROR_NO: "UNKOWN"}, null)
-    }
+    handleConnection(callback)
+    if(conn.state === 'disconnected') return
 
      conn.query(sql, (error, results, fields) => {
         if(error) {
@@ -82,6 +78,22 @@ var getUser = async (name, callback) => {
         return callback({ERROR: "UNKNOWN_ERROR", CODE:"UNKOWN"}, null)
         //console.log(results[0].name)
     })
+}
+
+
+
+function handleConnection(callback) {
+    if(conn.state === 'disconnected') {
+        conn.connect(err => {
+            if(err) {
+                //console.log("database connection failed.")
+                //console.log({ERROR_CODE: err.code, ERROR_NO: err.errno})
+                return callback({ERROR: "DATABASE CONNECTION FAILURE", ERROR_CODE: err.code}, null)
+            }
+
+            console.log("database connected successfully.", "status: ", conn.state)
+        })
+    }
 }
 
 
