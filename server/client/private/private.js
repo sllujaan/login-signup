@@ -1,39 +1,31 @@
+import { USER_TOEKN, setToken_localStorage, getToken_localStorage, removeToken_localStorage } from '../services/localStorage_services.js'
+import { validToken } from '../services/client_server_api_services.js'
 
 
 var containerPrivateContent = document.querySelector(".container-private-content")
 
-console.log(containerPrivateContent)
-const USER_TOEKN = "____UUID__TOKEN0x03889100"
-
 
 function processToken() {
-    TOKEN = getToken(USER_TOEKN)
+    var TOKEN = getToken_localStorage(USER_TOEKN)
     if(!TOKEN) return showUnauthorizedUser("Unauthorized User No Token Found.")
     
     validToken()
     .then(data => {
         console.log(data)
-        showTrustedUser("Welcome You are a trusted User!")
+        showTrustedUser(data.name)
     })
     .catch(err => {
         console.error(err)
         return showUnauthorizedUser("Unauthorized User invalid Token.")
     })
 }
+
 processToken()
-
-function removeToken(TOKEN_ID) {
-    return localStorage.removeItem(TOKEN_ID)
-}
-
-function getToken(TOKEN_ID) {
-    return localStorage.getItem(TOKEN_ID)
-}
 
 
 function showUnauthorizedUser(message) {
 
-    removeToken(USER_TOEKN)
+    removeToken_localStorage(USER_TOEKN)
 
     var h1 = document.createElement("h1")
     h1.classList.add("unauthorized")
@@ -68,46 +60,12 @@ function showUnauthorizedUser(message) {
 }
 
 
-function showTrustedUser(message) {
+function showTrustedUser(name) {
     var h1 = document.createElement("h1")
     h1.classList.add("trusted")
-    h1.innerText = `${message}`
+    h1.innerHTML = `Welcome <span style="color:blue;">${name}</span> You are a trusted User!`
 
     containerPrivateContent.innerHTML = ''
     containerPrivateContent.append(h1)
 
-}
-
-
-async function validToken() {
-
-    const privateURL = "http://localhost:3000/private"
-    try{
-        var res = await fetch(
-            privateURL,
-            {
-                method: 'POST',
-                mode: 'cors', // no-cors, *cors, same-origin
-                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                credentials: 'same-origin', // include, *same-origin, omit
-                headers: {
-                    'Authorization': `Bearer ${getToken(USER_TOEKN)}`,
-                    'Content-Type': 'application/json;charset=utf-8'
-                },
-                redirect: 'follow', // manual, *follow, error
-                referrerPolicy: 'no-referrer' // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-                
-            }
-        )
-
-        if(res.status === 200) return res.json()
-        return new Promise((resolve, reject) => {
-            reject({status: res.status, statusText: res.statusText})
-        })
-        
-    }
-    catch(err) {
-        console.log(err)
-        return err
-    }
 }

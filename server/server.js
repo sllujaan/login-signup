@@ -151,8 +151,12 @@ app.get('/login', (req, res) => {
     res.sendFile("client/login/login.html", {root: __dirname})
 })
 
-app.get('/signup', (req, res) => {
+app.get('/signup:status', (req, res) => {
     res.sendFile("client/signup/signup.html", {root: __dirname})
+})
+
+app.get('/signup-success', (req, res) => {
+    res.sendFile("client/signup_success/signup_success.html", {root: __dirname})
 })
 
 app.get('/home', (req, res) => {

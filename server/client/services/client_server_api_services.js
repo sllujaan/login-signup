@@ -1,11 +1,4 @@
-
-
-
-
-
-
-
-
+import { USER_TOEKN, getToken_localStorage } from "./localStorage_services.js"
 
 
 
@@ -58,6 +51,36 @@ export async function signupDB(name, password) {
         }
     )
 
+
+    if(res.status === 200) return res.json()
+    return new Promise((resolve, reject) => {
+        reject({status: res.status, statusText: res.statusText})
+    })
+}
+
+
+
+
+export async function validToken() {
+
+    const privateURL = "http://localhost:3000/private"
+
+    var res = await fetch(
+        privateURL,
+        {
+            method: 'POST',
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Authorization': `Bearer ${getToken_localStorage(USER_TOEKN)}`,
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer' // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            
+        }
+    )
 
     if(res.status === 200) return res.json()
     return new Promise((resolve, reject) => {
