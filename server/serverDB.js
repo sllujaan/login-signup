@@ -176,9 +176,12 @@ catch(err) {
 */
 
 
+function sum(a, b) {
+    return a + b;
+  }
 
 
 
-module.exports = {conn, getUser, addUser, ER_DUP_ENTRY}
+module.exports = {conn, getUser, addUser, ER_DUP_ENTRY, sum}
 
 
