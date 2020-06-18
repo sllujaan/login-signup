@@ -33,7 +33,7 @@ conn.connect(err => {
     console.log("database connected successfully.", "status: ", conn.state)
 })
 
-var addUser = (name, password, callback) => {
+var addUser = async (name, password, callback) => {
     
     //const sql = `INSERT INTO users (name, password) VALUES ("${name}", "${password}")`
     var sql = `INSERT INTO ?? (??, ??) VALUES (?, ?);`
@@ -43,8 +43,19 @@ var addUser = (name, password, callback) => {
 
     console.log(conn.state)
 
-    handleConnection(callback)
-    if(conn.state === 'disconnected') return
+
+    //resolving db connection issues while the server is running--------------------------------
+    var connectionResponse = await handleConnection()
+    .catch(err => {
+        console.log("handleConnection err = ", err)
+        return callback(err, null)
+    })
+
+    if(connectionResponse.state) console.log("connectionResponse = ", connectionResponse.state)
+
+    if(conn.state === 'disconnected') {console.log("server was still disconnected."); return}
+
+    //------------------------------------------------------------------------------------------
 
      conn.query(sql, (error, results, fields) => {
         if(error) {
@@ -70,6 +81,19 @@ var getUser = async (name, callback) => {
     var inserts = ['users', 'name', name]
     sql = mysql.format(sql, inserts)
 
+    //resolving db connection issues while the server is running--------------------------------
+    var connectionResponse = await handleConnection()
+    .catch(err => {
+        console.log("handleConnection err = ", err)
+        return callback(err, null)
+    })
+
+    if(connectionResponse.state) console.log("connectionResponse = ", connectionResponse.state)
+
+    if(conn.state === 'disconnected') {console.log("server was still disconnected."); return}
+
+    //------------------------------------------------------------------------------------------
+
     conn.query(sql, (error, results, fields) => {
         
         if(error) return callback({ERROR_CODE: error.code, ERROR_NO: error.errno}, null)
@@ -82,18 +106,52 @@ var getUser = async (name, callback) => {
 
 
 
-function handleConnection(callback) {
-    if(conn.state === 'disconnected') {
-        conn.connect(err => {
-            if(err) {
-                //console.log("database connection failed.")
-                //console.log({ERROR_CODE: err.code, ERROR_NO: err.errno})
-                return callback({ERROR: "DATABASE CONNECTION FAILURE", ERROR_CODE: err.code}, null)
-            }
+async function handleConnection() {
+    console.log("handleConnection status = ", conn.state)
 
-            console.log("database connected successfully.", "status: ", conn.state)
-        })
-    }
+
+    return new Promise((resolve, reject) => {
+
+        if(conn.state === 'disconnected') {
+        
+            conn = mysql.createConnection({
+                host: MYSQL_HOST,
+                user: MYSQL_USER,
+                password: MYSQL_PASSWORD,
+                database: MYSQL_DATABASE
+            })
+    
+            conn.connect(err => {
+                if(err) {
+                    //console.log("database connection failed.")
+                    //console.log({ERROR_CODE: err.code, ERROR_NO: err.errno})
+                    return reject({ERROR: "DATABASE CONNECTION FAILURE", ERROR_CODE: err.code})
+                    //return callback({ERROR: "DATABASE CONNECTION FAILURE", ERROR_CODE: err.code}, null)
+                }
+    
+                console.log("database connected successfully.", "status: ", conn.state)
+                
+                conn.on('error', (err) => {
+                    console.log("database error>>>>>>>>>>>")
+                    console.log(err)
+                })
+                
+                return resolve({status: "server connected.", state: conn.state})
+    
+    
+            })
+        }
+        else{
+            return resolve({status: "server was already connected.", state: conn.state})
+        }
+
+        
+
+    })
+    
+
+
+    
 }
 
 
