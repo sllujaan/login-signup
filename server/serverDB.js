@@ -89,7 +89,7 @@ var getUser = async (name, callback) => {
         return callback(err, null)
     })
 
-    if(onnectionResponse && connectionResponse.state) console.log("connectionResponse = ", connectionResponse.state)
+    if(connectionResponse && connectionResponse.state) console.log("connectionResponse = ", connectionResponse.state)
 
     if(conn.state === 'disconnected') {console.log("server was still disconnected."); return}
 
