@@ -6,10 +6,7 @@
   "scripts": {
     "test": "jest",
     "start": "node server.js",
-    "startLocal": "nodemon server.js",
-    "devStart": "nodemon server/music_player.js",
-    "build": "node-gyp rebuild",
-    "clean": "node-gyp clean"
+    "startLocal": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -28,7 +25,6 @@
   },
   "devDependencies": {
     "jest": "^25.5.3",
-    "node-gyp": "^6.1.0",
     "nodemon": "^2.0.2"
   }
 }
