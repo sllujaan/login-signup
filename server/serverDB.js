@@ -57,6 +57,7 @@ var addUser = async (name, password, callback) => {
 
     //------------------------------------------------------------------------------------------
 
+    console.log(sql)
      conn.query(sql, (error, results, fields) => {
         if(error) {
             //console.log(error)
@@ -88,12 +89,13 @@ var getUser = async (name, callback) => {
         return callback(err, null)
     })
 
-    if(connectionResponse.state) console.log("connectionResponse = ", connectionResponse.state)
+    if(onnectionResponse && connectionResponse.state) console.log("connectionResponse = ", connectionResponse.state)
 
     if(conn.state === 'disconnected') {console.log("server was still disconnected."); return}
 
     //------------------------------------------------------------------------------------------
 
+    console.log(sql)
     conn.query(sql, (error, results, fields) => {
         
         if(error) return callback({ERROR_CODE: error.code, ERROR_NO: error.errno}, null)
