@@ -10,6 +10,8 @@ const {
 } = process.env
 
 
+console.log("MYSQL_HOST = ", MYSQL_HOST)
+
 
 var conn = mysql.createConnection({
     host: MYSQL_HOST,

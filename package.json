@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "start": "node server.js",
-    "startLocal": "nodemon server.js"
+    "startLocal": "nodemon server/server.js"
   },
   "keywords": [],
   "author": "",
