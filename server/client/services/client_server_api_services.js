@@ -1,10 +1,25 @@
 import { USER_TOEKN, getToken_localStorage } from "./localStorage_services.js"
 
 
+//set ENVIRONMENT variable to developement is you are working locally.
+//set ENVIRONMENT variable to production is you are working locally.
+const ENVIRONMENT = 'production'
+
+const serverUrl_production = `https://authpro.herokuapp.com`
+const serverUrl_developement = `http://localhost:5000`
+
+var serverUrl = null
+
+if(ENVIRONMENT === 'production') serverUrl = serverUrl_production
+else serverUrl = serverUrl_developement
+
+
+
+
 
 export async function login(name, password) {
 
-    const loginURL = `http://localhost:3000/login`
+    const loginURL = `${serverUrl}/login`
 
     var res = await fetch(
         loginURL,
@@ -33,7 +48,7 @@ export async function login(name, password) {
 
 export async function signupDB(name, password) {
 
-    const signupURL = `http://localhost:3000/signup`
+    const signupURL = `${serverUrl}/signup`
     
     var res = await fetch(
         signupURL,
@@ -63,7 +78,7 @@ export async function signupDB(name, password) {
 
 export async function validToken() {
 
-    const privateURL = "http://localhost:3000/private"
+    const privateURL = `${serverUrl}/private`
 
     var res = await fetch(
         privateURL,
