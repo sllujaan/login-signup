@@ -3,14 +3,17 @@ import { USER_TOEKN, getToken_localStorage } from "./localStorage_services.js"
 
 //set ENVIRONMENT variable to developement is you are working locally.
 //set ENVIRONMENT variable to production is you are working locally.
-const ENVIRONMENT = 'production'
+const PRODUCTION = 'PRODUCTION'
+const DEVELOPEMENT = 'DEVELOPEMENT'
+
+const ENVIRONMENT = PRODUCTION
 
 const serverUrl_production = `https://authpro.herokuapp.com`
-const serverUrl_developement = `http://localhost:5000`
+const serverUrl_developement = `http://localhost:3000`
 
 var serverUrl = null
 
-if(ENVIRONMENT === 'production') serverUrl = serverUrl_production
+if(ENVIRONMENT === 'PRODUCTION') serverUrl = serverUrl_production
 else serverUrl = serverUrl_developement
 
 

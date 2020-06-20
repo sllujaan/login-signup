@@ -5,7 +5,6 @@ var bcrypt = require('bcrypt')
 var bodyParser = require('body-parser')
 var cors = require("cors")
 var database = require("./serverDB")
-var url = require("url")
 
 var app = express()
 
@@ -22,7 +21,6 @@ var users = []
 const {
     ACCESS_TOEKN_SECRET = process.env.ACCESS_TOEKN_SECRET
 } = process.env
-
 
 
 
