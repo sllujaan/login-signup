@@ -1,5 +1,6 @@
 import { USER_TOEKN, setToken_localStorage, getToken_localStorage, removeToken_localStorage } from '../services/localStorage_services.js'
 import { validToken } from '../services/client_server_api_services.js'
+import { getBusyIcon } from '../services/common_services.js'
 
 
 var containerPrivateContent = document.querySelector(".container-private-content")
@@ -9,6 +10,8 @@ function processToken() {
     var TOKEN = getToken_localStorage(USER_TOEKN)
     if(!TOKEN) return showUnauthorizedUser("Unauthorized User! No Token Found.")
     
+    handleBusy()
+
     validToken()
     .then(data => {
         console.log(data)
@@ -74,4 +77,10 @@ function showTrustedUser(name) {
     containerPrivateContent.append(h1)
     containerPrivateContent.append(div_signout)
 
+}
+
+
+function handleBusy() {
+    containerPrivateContent.innerHTML = ''
+    containerPrivateContent.append(getBusyIcon())
 }
