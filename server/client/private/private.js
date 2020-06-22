@@ -69,7 +69,7 @@ function showTrustedUser(name) {
     h1.innerHTML = `Welcome <span style="color:blue;">${name}</span> You are a trusted User!`
 
     var div_signout = document.createElement("div")
-    div_signout.classList.add("signout")
+    div_signout.classList.add("signout", "responsive-link")
     div_signout.innerHTML = `<a href="/signup">SignOut!</a>`
 
     //<div class="signout"><a href="/signup">SignOut!</a></div>
