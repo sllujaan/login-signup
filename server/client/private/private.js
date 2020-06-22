@@ -35,7 +35,7 @@ function showUnauthorizedUser(message) {
     h1.innerText = `${message}`
 
     var span = document.createElement("span")
-    span.classList.add("redirect")
+    span.classList.add("redirect", "responsive-link")
     span.innerHTML = `You will be redirected to <a href="/login">Login Page!</a> in `
 
     var timer = document.createElement("span")

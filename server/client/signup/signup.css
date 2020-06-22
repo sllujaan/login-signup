@@ -2,6 +2,8 @@
 body{
     padding: 0;
     margin: 0;
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
 .login-container{
@@ -58,5 +60,16 @@ body{
     color: red;
 }
 
+
+.responsive-link a {
+    text-decoration: none;
+    color: rgb(3, 102, 214);
+    font-weight: 600;
+}
+
+
+.responsive-link a:hover {
+text-decoration: underline;
+}
 
 

@@ -26,7 +26,7 @@ const {
 
 app.get('/', (req, res) => {
 
-    res.redirect('/home')
+    res.redirect('/login')
 })
 
 app.get('/users', (req, res) => {
